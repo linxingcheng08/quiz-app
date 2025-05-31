@@ -1,12 +1,17 @@
-// ロゴアニメーション終了後に本編表示
+// 初期設定：HTML要素の取得
 const introVideo = document.getElementById('intro-video');
+const bgVideo = document.getElementById('bg-video');
 const mainContent = document.getElementById('main-content');
+const difficultyButtons = document.querySelectorAll('.difficulty-btn');
+const quizContainer = document.getElementById('quiz-container');
+const difficultySelection = document.getElementById('difficulty-selection');
+const questionElem = document.getElementById('question');
+const leftBtn = document.getElementById('left-btn');
+const rightBtn = document.getElementById('right-btn');
+const resultElem = document.getElementById('result');
+const countdownElem = document.getElementById('countdown');
 
-introVideo.addEventListener('ended', () => {
-  introVideo.style.display = 'none';
-  mainContent.classList.remove('hidden');
-});
-
+// クイズデータ
 const allQuestions = [
   {
     difficulty: 1,
@@ -32,7 +37,7 @@ const allQuestions = [
     right: "100℃",
     answer: "right"
   }
-  // 追加自由
+  // 必要に応じて追加してください
 ];
 
 let questions = [];
@@ -40,10 +45,18 @@ let currentQuestionIndex = 0;
 let countdownInterval;
 let selectedDifficulty = null;
 
-document.querySelectorAll('.difficulty-btn').forEach(btn => {
+// ▼ ロゴ動画終了時に背景＋UI表示
+introVideo.addEventListener('ended', () => {
+  introVideo.classList.add('hidden');
+  bgVideo.classList.remove('hidden');
+  mainContent.classList.remove('hidden');
+});
+
+// ▼ 難易度選択時の処理
+difficultyButtons.forEach(btn => {
   btn.addEventListener('click', function () {
     selectedDifficulty = parseInt(this.dataset.level);
-    document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('selected'));
+    difficultyButtons.forEach(b => b.classList.remove('selected'));
     this.classList.add('selected');
 
     questions = allQuestions.filter(q => q.difficulty <= selectedDifficulty);
@@ -53,46 +66,51 @@ document.querySelectorAll('.difficulty-btn').forEach(btn => {
     }
 
     questions.sort((a, b) => a.difficulty - b.difficulty);
-    document.getElementById('difficulty-selection').style.display = 'none';
-    document.getElementById('quiz-container').style.display = 'block';
+    difficultySelection.style.display = 'none';
+    quizContainer.style.display = 'block';
+    currentQuestionIndex = 0;
     showQuestion();
   });
 });
 
+// ▼ クイズを表示
 function showQuestion() {
   clearInterval(countdownInterval);
 
   if (currentQuestionIndex >= questions.length) {
-    document.getElementById('result').innerText = "クイズ終了！";
+    resultElem.innerText = "クイズ終了！";
     return;
   }
 
   const q = questions[currentQuestionIndex];
-  document.getElementById('question').innerText = q.question;
-  document.getElementById('left-btn').innerText = q.left;
-  document.getElementById('right-btn').innerText = q.right;
-  document.getElementById('result').innerText = "";
+  questionElem.innerText = q.question;
+  leftBtn.innerText = q.left;
+  rightBtn.innerText = q.right;
+  resultElem.innerText = "";
 
   let timeLeft = 10;
-  document.getElementById('countdown').innerText = timeLeft;
+  countdownElem.innerText = timeLeft;
 
   countdownInterval = setInterval(() => {
     timeLeft--;
-    document.getElementById('countdown').innerText = timeLeft;
+    countdownElem.innerText = timeLeft;
     if (timeLeft <= 0) {
       clearInterval(countdownInterval);
-      document.getElementById('result').innerText = "GAME OVER";
+      resultElem.innerText = "GAME OVER";
     }
   }, 1000);
 }
 
-document.getElementById('left-btn').addEventListener('click', () => checkAnswer('left'));
-document.getElementById('right-btn').addEventListener('click', () => checkAnswer('right'));
+// ▼ ボタンのイベント処理
+leftBtn.addEventListener('click', () => checkAnswer('left'));
+rightBtn.addEventListener('click', () => checkAnswer('right'));
 
+// ▼ 正誤判定
 function checkAnswer(answer) {
   clearInterval(countdownInterval);
   const correct = questions[currentQuestionIndex].answer === answer;
-  document.getElementById('result').innerText = correct ? "正解！" : "GAME OVER";
+  resultElem.innerText = correct ? "正解！" : "GAME OVER";
+
   if (correct) {
     currentQuestionIndex++;
     setTimeout(showQuestion, 2000);
