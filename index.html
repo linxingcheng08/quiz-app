@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>どばリーグ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <video id="bg-video" autoplay loop muted>
+    <source src="background.mp4" type="video/mp4">
+    お使いのブラウザは動画タグに対応していません。
+  </video>
+
+  <div class="overlay">
+    <h1>どばリーグ</h1>
+    <div id="difficulty-selection">
+      <p>難易度を選んでください</p>
+      <button class="difficulty-btn" data-level="1">1</button>
+      <button class="difficulty-btn" data-level="2">2</button>
+      <button class="difficulty-btn" data-level="3">3</button>
+      <button class="difficulty-btn" data-level="4">4</button>
+      <button class="difficulty-btn" data-level="5">5</button>
+    </div>
+
+    <div id="quiz-container">
+      <div id="countdown"></div>
+      <div id="question">問題がここに表示されます</div>
+      <div id="choices">
+        <button class="choice-btn" id="left-btn">左</button>
+        <button class="choice-btn" id="right-btn">右</button>
+      </div>
+      <div id="result"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
