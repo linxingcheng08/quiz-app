@@ -1,3 +1,12 @@
+// ロゴアニメーション終了後に本編表示
+const introVideo = document.getElementById('intro-video');
+const mainContent = document.getElementById('main-content');
+
+introVideo.addEventListener('ended', () => {
+  introVideo.style.display = 'none';
+  mainContent.classList.remove('hidden');
+});
+
 const allQuestions = [
   {
     difficulty: 1,
@@ -23,7 +32,7 @@ const allQuestions = [
     right: "100℃",
     answer: "right"
   }
-  // ← 必要に応じてどんどん追加してOK
+  // 追加自由
 ];
 
 let questions = [];
